@@ -1,0 +1,103 @@
+.dashboard {
+  padding: 25px;
+  background: #f5f7fb;
+  min-height: 100vh;
+}
+
+/* HEADER */
+.patient-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: white;
+  padding: 20px;
+  border-radius: 14px;
+  margin-bottom: 20px;
+}
+
+.location {
+  color: #888;
+  font-size: 14px;
+}
+
+/* RISK BAR */
+.risk-bar {
+  padding: 12px;
+  border-radius: 10px;
+  text-align: center;
+  margin-bottom: 20px;
+  font-weight: 500;
+}
+
+.risk-bar.high {
+  background: #ffe3e3;
+  color: #c92a2a;
+}
+
+.risk-bar.medium {
+  background: #fff3bf;
+  color: #e67700;
+}
+
+.risk-bar.normal {
+  background: #d3f9d8;
+  color: #2b8a3e;
+}
+
+/* VITAL GRID */
+.vitals-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 18px;
+}
+
+/* CARD BASE */
+.vital-card {
+  padding: 18px;
+  border-radius: 14px;
+  color: white;
+  text-align: center;
+  font-weight: 500;
+}
+
+/* COLORS (match screenshot) */
+.vital-card.red {
+  background: linear-gradient(135deg, #ff6b6b, #ff8787);
+}
+
+.vital-card.blue {
+  background: linear-gradient(135deg, #339af0, #74c0fc);
+}
+
+.vital-card.green {
+  background: linear-gradient(135deg, #20c997, #63e6be);
+}
+
+.vital-card.purple {
+  background: linear-gradient(135deg, #845ef7, #b197fc);
+}
+
+.vital-card.yellow {
+  background: linear-gradient(135deg, #fcc419, #ffd43b);
+  color: #333;
+}
+
+.vital-card.darkgreen {
+  background: linear-gradient(135deg, #2f9e44, #69db7c);
+}
+
+/* REMARKS */
+.remarks-box {
+  margin-top: 25px;
+  padding: 20px;
+  background: white;
+  border-radius: 14px;
+}
+
+.back-btn {
+  border: none;
+  background: none;
+  cursor: pointer;
+  margin-bottom: 8px;
+  color: #339af0;
+}

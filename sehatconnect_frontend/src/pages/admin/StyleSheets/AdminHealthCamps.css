@@ -1,0 +1,120 @@
+.admin-healthcamp-container {
+  padding: 80px 10%;
+  background-color: #f9fafc;
+  min-height: 100vh;
+}
+
+.admin-healthcamp-container h2 {
+  margin-bottom: 20px;
+  color: #2c3e50;
+}
+
+.healthcamp-form {
+  background: white;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  border-radius: 10px;
+  padding: 25px;
+  width: 100%;
+  max-width: 600px;
+  margin-bottom: 40px;
+}
+
+.healthcamp-form label {
+  display: block;
+  font-weight: 600;
+  margin-top: 10px;
+  color: #333;
+}
+
+.healthcamp-form input,
+.healthcamp-form textarea {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 15px;
+}
+
+.healthcamp-form textarea {
+  min-height: 80px;
+}
+
+.add-btn {
+  margin-top: 15px;
+  background-color: #1abc9c;
+  border: none;
+  color: white;
+  font-weight: 600;
+  padding: 10px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.camp-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.camp-card {
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 1px 5px rgba(0,0,0,0.1);
+  padding: 20px;
+  width: 260px;
+  transition: transform 0.2s;
+}
+
+.camp-card:hover {
+  transform: translateY(-4px);
+}
+
+.camp-card h4 {
+  color: #2c3e50;
+  margin-bottom: 8px;
+}
+
+.camp-card .desc {
+  color: #555;
+  font-size: 14px;
+}
+.camp-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.status-tag {
+  color: #fff;
+  font-size: 13px;
+  padding: 4px 8px;
+  border-radius: 8px;
+  font-weight: 600;
+}
+
+.camp-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.edit-btn, .delete-btn {
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.edit-btn {
+  background-color: #3498db;
+  color: white;
+}
+
+.delete-btn {
+  background-color: #e74c3c;
+  color: white;
+}
+

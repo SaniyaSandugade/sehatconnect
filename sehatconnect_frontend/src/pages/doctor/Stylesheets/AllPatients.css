@@ -1,0 +1,295 @@
+/* GRID FIX → ensures 1 patient = 1 card properly */
+.patients-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 20px;
+  align-items: stretch;
+}
+
+/* EACH CARD MUST BE SELF CONTAINED */
+.patient-card {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 18px;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.06);
+  border: 1px solid #eef2f7;
+  transition: all 0.25s ease;
+
+  /* IMPORTANT FIX */
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* KEEP CONTENT INSIDE CARD CLEAN */
+.patient-card h3 {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 18px;
+}
+
+/* HOVER EFFECT (same as before style) */
+.patient-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.1);
+}
+
+/* TEXT */
+.patient-card p {
+  font-size: 13px;
+  margin: 3px 0;
+  color: #6b7a90;
+}
+
+/* BUTTONS ALWAYS STACK INSIDE CARD */
+.patient-card button {
+  width: 100%;
+}
+
+/* BASE CARD (pro designer style) */
+.patient-card {
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 18px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.06);
+  border: 1px solid #eef2f7;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* PREMIUM HOVER EFFECT */
+.patient-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.12);
+}
+
+/* TITLE */
+.patient-card h3 {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 18px;
+  color: #1f2d3d;
+}
+
+/* DELETE ICON */
+.delete-icon {
+  cursor: pointer;
+  color: #e74c3c;
+  transition: 0.2s ease;
+}
+
+.delete-icon:hover {
+  transform: scale(1.3);
+  color: #c0392b;
+}
+
+/* DASHBOARD BUTTON (PRO BLUE) */
+.dashboard-btn {
+  width: 100%;
+  padding: 11px;
+  border-radius: 12px;
+  border: none;
+  background: linear-gradient(135deg, #4f8df7, #2563eb);
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  box-shadow: 0 6px 15px rgba(37, 99, 235, 0.25);
+}
+
+.dashboard-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 25px rgba(37, 99, 235, 0.35);
+}
+
+/* VIEW DETAILS BUTTON (PRO GREEN) */
+.details-btn {
+  width: 100%;
+  padding: 11px;
+  border-radius: 12px;
+  border: none;
+  background: linear-gradient(135deg, #2ecc71, #16a34a);
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  box-shadow: 0 6px 15px rgba(22, 163, 74, 0.25);
+}
+
+.details-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 25px rgba(22, 163, 74, 0.35);
+}
+
+/* TEXT */
+.patient-card p {
+  color: #6b7a90;
+  font-size: 13px;
+}
+
+
+/* CENTER TITLE */
+.patients-container h2 {
+  text-align: center;
+  font-size: 26px;
+  font-weight: 700;
+  margin-bottom: 25px;
+  color: #1f2d3d;
+}
+
+/* GRID (unchanged but stable) */
+.patients-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 22px;
+  align-items: stretch;
+}
+
+/* CARD (stronger shadow + pro feel) */
+.patient-card {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 18px;
+  border: 1px solid #eef2f7;
+
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
+
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* HOVER (premium lift) */
+.patient-card:hover {
+  transform: translateY(-7px);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.14);
+}
+
+/* DELETE ICON FIX (VISIBLE NOW 🔥) */
+.delete-icon {
+  margin-left: 10px;
+  cursor: pointer;
+
+  font-size: 18px;
+  color: #ff3b30; /* strong red (iOS red = very visible) */
+
+  padding: 4px;
+  border-radius: 6px;
+
+  transition: all 0.2s ease;
+}
+
+.delete-icon:hover {
+  background: rgba(255, 59, 48, 0.1);
+  transform: scale(1.2);
+}
+
+/* TEXT */
+.patient-card p {
+  font-size: 13px;
+  color: #6b7a90;
+  margin: 3px 0;
+}
+
+/* NAME ROW */
+.patient-card h3 {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 18px;
+  color: #1f2d3d;
+}
+/* 🖼️ ROUND PHOTO */
+.patient-photo {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #e5e7eb;
+  margin-bottom: 10px;
+}
+
+/* HEADER ROW */
+.patient-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* DELETE ICON */
+.delete-icon {
+  cursor: pointer;
+  font-size: 18px;
+  color: #ff3b30;
+  padding: 5px;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.delete-icon:hover {
+  background: rgba(255, 59, 48, 0.1);
+  transform: scale(1.2);
+}
+
+/* DASHBOARD BUTTON */
+.dashboard-btn {
+  width: 100%;
+  padding: 11px;
+  border-radius: 12px;
+  border: none;
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.25s;
+  box-shadow: 0 6px 15px rgba(37, 99, 235, 0.25);
+}
+
+.dashboard-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 25px rgba(37, 99, 235, 0.35);
+}
+
+/* DETAILS BUTTON */
+.details-btn {
+  width: 100%;
+  padding: 11px;
+  border-radius: 12px;
+  border: none;
+  background: linear-gradient(135deg, #2ecc71, #16a34a);
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.25s;
+  box-shadow: 0 6px 15px rgba(22, 163, 74, 0.25);
+}
+
+.details-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 25px rgba(22, 163, 74, 0.35);
+}
+
+
+/* 🔥 KEEP BUTTONS ALWAYS AT BOTTOM */
+.patient-card {
+  display: flex;
+  flex-direction: column;
+}
+
+/* ACTION BUTTON CONTAINER */
+.card-actions {
+  margin-top: auto; /* 🔥 THIS FIXES ALIGNMENT */
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* ENSURE FULL WIDTH */
+.card-actions button {
+  width: 100%;
+}

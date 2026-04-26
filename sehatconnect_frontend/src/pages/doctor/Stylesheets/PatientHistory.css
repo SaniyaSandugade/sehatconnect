@@ -1,0 +1,148 @@
+/* BACKGROUND */
+.history-container {
+  padding: 30px;
+  min-height: 100vh;
+  background: linear-gradient(120deg, #f4f8ff, #edf4ff);
+  font-family: "Segoe UI", sans-serif;
+}
+
+/* HEADER */
+.history-header {
+  margin-bottom: 30px;
+}
+
+.history-header h2 {
+  font-size: 28px;
+  color: #1f2a44;
+  font-weight: 600;
+}
+
+.history-header p {
+  color: #6c757d;
+  font-size: 14px;
+  margin-top: 4px;
+}
+
+/* GRID */
+.history-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 24px;
+}
+
+/* CARD */
+.history-card {
+  position: relative;
+  padding: 22px;
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(14px);
+  border: 1px solid rgba(255,255,255,0.6);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.06);
+  transition: all 0.3s ease;
+}
+
+.history-card:hover {
+  transform: translateY(-6px) scale(1.01);
+  box-shadow: 0 18px 40px rgba(0,0,0,0.08);
+}
+
+/* DATE BADGE */
+.card-date {
+  position: absolute;
+  top: -12px;
+  right: 20px;
+  background: linear-gradient(135deg, #74c0fc, #a5d8ff);
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  color: #1c3d5a;
+  font-weight: 500;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+}
+
+/* VITALS GRID */
+.vitals {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
+  margin-top: 20px;
+}
+
+/* VITAL CARD */
+.vital {
+  padding: 15px;
+  border-radius: 14px;
+  background: #f1f5ff;
+  transition: 0.25s ease;
+  cursor: default;
+}
+
+.vital:hover {
+  transform: scale(1.06);
+}
+
+/* TEXT */
+.vital span {
+  display: block;
+  font-size: 12px;
+  color: #6c757d;
+}
+
+.vital b {
+  font-size: 18px;
+  margin-top: 5px;
+  display: block;
+  font-weight: 600;
+}
+
+/* STATUS COLORS */
+.vital.normal {
+  background: #e6fcf5;
+  color: #087f5b;
+}
+
+.vital.high {
+  background: #fff0f6;
+  color: #c2255c;
+}
+
+.vital.low {
+  background: #fff9db;
+  color: #e67700;
+}
+
+/* REMARKS */
+.remarks {
+  margin-top: 18px;
+  padding: 13px;
+  border-radius: 12px;
+  background: #f8f9ff;
+  border-left: 4px solid #4dabf7;
+  font-size: 13px;
+  color: #495057;
+  line-height: 1.5;
+}
+
+/* EMPTY STATE */
+.no-data {
+  text-align: center;
+  margin-top: 80px;
+  color: #868e96;
+  font-size: 16px;
+}
+
+/* RESPONSIVE */
+@media (max-width: 600px) {
+  .history-container {
+    padding: 18px;
+  }
+
+  .history-header h2 {
+    font-size: 22px;
+  }
+
+  .vitals {
+    grid-template-columns: 1fr;
+  }
+}

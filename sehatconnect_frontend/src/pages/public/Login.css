@@ -1,0 +1,138 @@
+.back-btn {
+  background: none;
+  border: none;
+  color: #1A54B5;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+}
+
+.back-btn:hover {
+  color: #082d6d;
+}
+
+.login-page {
+  background-color:#ffffff;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Poppins', sans-serif;
+}
+
+.login-card {
+  background-color: var(--light-blue, #EAF7FE);
+  padding: 2.5rem;
+  border-radius: 0px 30px 0px 30px;
+  width: 500px;
+  height: 550px;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+}
+
+.login-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.login-logo {
+  height: 40px;
+  width: 40px;
+}
+
+.app-title {
+  font-size: 24px;
+  color:#1A54B5;
+  font-weight: 600;
+  font-family: "Inika", serif;
+}
+
+.login-title {
+  text-align: center;
+  font-size: 24px;
+  font-family:Verdana, Geneva, Tahoma, sans-serif;
+  color: #000;
+  margin-bottom: 1rem;
+  color: #1A54B5;
+}
+
+.login-form label {
+  display: block;
+  margin: 8px 0 5px;
+  color:#000;
+  font-size: 14px;
+}
+
+.login-form input {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 12px;
+  background: white;
+  box-shadow: 0px 2px 5px rgba(0,0,0,0.1);
+  font-size: 14px;
+  margin-bottom: 12px;
+}
+.login-form select {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 12px;
+  background: white;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+  font-size: 14px;
+  margin-bottom: 12px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  color: #333;
+  /* appearance: none; hides the default arrow for a cleaner look */
+  cursor: pointer;
+  transition: box-shadow 0.2s ease, transform 0.1s ease;
+}
+
+
+.login-form select:hover,
+.login-form select:focus {
+  outline: none;
+  box-shadow: 0px 3px 8px rgba(26, 181, 134, 0.3);
+  transform: translateY(-1px);
+}
+
+.forgot-password {
+  text-align: right;
+  font-size: 12px;
+  color:#000;
+  cursor: pointer;
+  margin-top: -5px;
+}
+
+.login-form button[type="submit"] {
+  width: 100%;
+  padding: 10px;
+  background-color: #1AB586;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+button:hover {
+  opacity: 0.8;
+}
+
+/* Hide default browser password eye icon */
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear,
+input[type="password"]::-webkit-credentials-auto-fill-button {
+  display: none !important;
+}
+
+input[type="password"]::-webkit-textfield-decoration-container {
+  display: none !important;
+}

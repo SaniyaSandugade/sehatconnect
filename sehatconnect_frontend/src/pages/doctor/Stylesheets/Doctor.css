@@ -1,0 +1,390 @@
+.doctor-dashboard {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: #f9fbfd;
+}
+
+.doctor-body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: calc(100vh - 70px);
+}
+
+.doctor-main {
+  flex: 1;
+  padding: 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  padding: 3rem;
+  margin-top: 20px;  
+}
+
+.doctor-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 85%;
+  max-width: 1100px;
+  gap: 3rem;
+}
+
+.doctor-left {
+  flex: 1;
+}
+
+.welcome-text {
+  font-size: 3rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: #000;
+}
+
+.doctor-tagline {
+  font-size: 1.3rem;
+  color: #444;
+  margin-bottom: 2rem;
+  line-height: 1.5;
+  max-width: 500px;
+}
+
+.doctor-buttons {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.btn-primary {
+  background-color: #1649b9;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  font-size: 1.1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.btn-primary:hover {
+  background-color: #052977;
+}
+
+.doctor-right img {
+  width: 85%;
+  max-width: 450px;
+  transition: all 0.5s ease;
+  transform: scale(1);
+  filter: drop-shadow(0 0 0 rgba(0, 72, 255, 0));
+}
+
+.doctor-right img:hover {
+  transform: scale(1.05);
+  filter: drop-shadow(0 0 40px rgba(128, 138, 165, 0.4));
+}
+
+
+
+.profile-top{
+  text-align:center;
+  margin-bottom:20px;
+}
+
+.profile-image{
+  width:120px;
+  height:120px;
+  border-radius:50%;
+  object-fit:cover;
+  margin-bottom:10px;
+}
+
+.profile-details{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+
+/* Responsive Media Queries */
+@media (max-width: 1024px) {
+  .doctor-content {
+    width: 90%;
+    gap: 2rem;
+  }
+  .welcome-text {
+    font-size: 2.5rem;
+  }
+  .doctor-tagline {
+    font-size: 1.1rem;
+  }
+  .doctor-right img {
+    max-width: 380px;
+  }
+}
+
+@media (max-width: 768px) {
+  .doctor-main {
+    padding: 2rem;
+  }
+  .doctor-content {
+    flex-direction: column-reverse;
+    text-align: center;
+  }
+  .doctor-right img {
+    width: 75%;
+  }
+}
+
+@media (max-width: 480px) {
+  .welcome-text {
+    font-size: 1.8rem;
+  }
+  .btn-primary {
+    width: 100%;
+    padding: 0.75rem;
+  }
+}
+
+/* NAVBAR */
+.doctor-navbar {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
+
+  display: flex;
+  align-items: center;
+  gap: 15px;
+
+  background: #1649b9;
+  color: white;
+
+  padding: 15px 25px;
+  font-size: 18px;
+}
+
+
+/* CARD */
+.profile-card{
+  width: 750px;
+  max-width: 90%;
+  min-height: 500px;   /* ✅ increases length */
+  padding: 40px;       /* ✅ more inner space */
+  border-radius: 12px;
+  background: white;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+/* IMAGE */
+.profile-image{
+  width:120px;
+  height:120px;
+  border-radius:50%;
+  object-fit:cover;
+  margin-bottom:10px;
+}
+
+.profile-top h2{
+  margin: 10px 0 5px;
+  font-size: 24px;
+}
+
+.profile-top p{
+  color: #666;
+}
+
+/* GRID DETAILS */
+.profile-details{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 25px;     /* more vertical + horizontal space */
+  margin-top: 25px;
+  font-size: 16px;
+}
+
+/* FIX BODY ALIGNMENT */
+.doctor-body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: calc(100vh - 70px); /* minus navbar */
+}
+
+/* CENTER CARD */
+.profile-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.profile-details p{
+  line-height: 1.6;   /* more vertical spacing */
+}
+
+.profile-details div{
+  background: #f8f9fb;
+  padding: 12px;
+  border-radius: 8px;
+}
+
+
+.profile-table{
+  margin-top: 25px;
+  width: 100%;
+}
+
+/* Each Row */
+.table-row{
+  display: flex;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid #eee;
+  font-size: 15px;
+}
+
+.table-row:hover{
+  background: #eef3ff;
+  transition: 0.3s;
+}
+
+/* Label (left side) */
+.table-row span:first-child{
+  font-weight: 600;
+  color: #333;
+}
+
+/* Value (right side) */
+.table-row span:last-child{
+  color: #555;
+}
+
+/* Alternate row color */
+.table-row:nth-child(even){
+  background: #f8f9fb;
+}
+
+
+.profile-table{
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid #eee;
+}    
+
+
+
+
+/* ================= FIX EDIT MODE INPUT ================= */
+.profile-table input {
+  width: 60%;
+  padding: 8px 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+/* FIX ROW ALIGNMENT WHEN INPUT COMES */
+.table-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;   /* prevents shrinking */
+}
+
+/* ================= FIX CARD HEIGHT AUTO ================= */
+.profile-card {
+  min-height: auto;  /* remove forced height */
+}
+
+/* ================= BETTER TABLE LOOK ================= */
+.profile-table {
+  margin-top: 25px;
+  width: 100%;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid #eee;
+}
+
+/* Better spacing between rows */
+.table-row {
+  padding: 16px 22px;
+  font-size: 15px;
+}
+
+/* Hover effect */
+.table-row:hover {
+  background: #eef3ff;
+}
+
+/* Alternate rows */
+.table-row:nth-child(even) {
+  background: #f8f9fb;
+}
+
+/* ================= BUTTON SECTION ================= */
+.profile-actions {
+  margin-top: 30px;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+/* BUTTON COMMON */
+.profile-actions button {
+  padding: 10px 20px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+/* EDIT */
+.btn-edit {
+  background: #1649b9;
+  color: white;
+}
+
+/* SAVE */
+.btn-save {
+  background: green;
+  color: white;
+}
+
+/* CANCEL */
+.btn-cancel {
+  background: gray;
+  color: white;
+}
+
+/* DELETE */
+.btn-delete {
+  background: red;
+  color: white;
+}
+
+/* ================= FIX CENTER ALIGNMENT ================= */
+.profile-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;  /* prevents vertical squish */
+  width: 100%;
+}
+
+/* ================= RESPONSIVE FIX ================= */
+@media (max-width: 768px) {
+  .profile-card {
+    width: 95%;
+    padding: 20px;
+  }
+
+  .table-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+  }
+
+  .profile-table input {
+    width: 100%;
+  }
+}

@@ -1,0 +1,267 @@
+/* MAIN LAYOUT */
+.hw-layout {
+  display: flex;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #eef2ff, #f8fafc);
+}
+
+/* CENTER CONTAINER */
+.hw-profile-container {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 30px;
+}
+
+/* CARD (GLASS + PREMIUM) */
+.hw-profile-card {
+  width: 500px;
+  max-width: 100%;
+
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(12px);
+
+  border-radius: 20px;
+  padding: 35px;
+
+  border: 1px solid rgba(255, 255, 255, 0.3);
+
+  box-shadow:
+    0 15px 40px rgba(0, 0, 0, 0.08),
+    0 5px 15px rgba(0, 0, 0, 0.05);
+
+  transition: all 0.3s ease;
+}
+
+.hw-profile-card:hover {
+  transform: translateY(-5px);
+  box-shadow:
+    0 25px 60px rgba(0, 0, 0, 0.12),
+    0 10px 25px rgba(0, 0, 0, 0.08);
+}
+
+/* PROFILE PHOTO */
+.profile-photo-section {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 22px;
+}
+
+.profile-photo,
+.photo-placeholder {
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+}
+
+/* IMAGE STYLE */
+.profile-photo {
+  object-fit: cover;
+  border: 4px solid #4f46e5;
+
+  box-shadow:
+    0 6px 18px rgba(79, 70, 229, 0.25),
+    0 0 0 6px rgba(79, 70, 229, 0.08);
+}
+
+/* PLACEHOLDER */
+.photo-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #eef2ff;
+  font-size: 32px;
+  color: #6366f1;
+  border: 2px dashed #c7d2fe;
+}
+
+/* DETAILS */
+.profile-details {
+  text-align: center;
+}
+
+.profile-details h2 {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 6px;
+  color: #111827;
+}
+
+.profile-details p {
+  margin: 4px 0;
+  font-size: 14px;
+  color: #6b7280;
+}
+
+/* INPUT FIELDS */
+.profile-details input {
+  width: 100%;
+  padding: 12px;
+  margin: 8px 0;
+
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+
+  outline: none;
+  transition: all 0.25s ease;
+  font-size: 14px;
+}
+
+/* INPUT FOCUS */
+.profile-details input:focus {
+  border-color: #6366f1;
+  box-shadow: 0 0 10px rgba(99, 102, 241, 0.25);
+}
+
+/* BUTTON GROUP */
+.profile-form-actions {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* ===================== */
+/* BUTTONS */
+/* ===================== */
+
+/* SAVE BUTTON */
+.save-btn {
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  color: white;
+
+  padding: 12px;
+  border-radius: 12px;
+  border: none;
+
+  cursor: pointer;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+
+  transition: all 0.3s ease;
+
+  box-shadow: 0 6px 15px rgba(34, 197, 94, 0.25);
+}
+
+.save-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 25px rgba(34, 197, 94, 0.35);
+}
+
+/* UPDATE BUTTON */
+.update-btn {
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  color: white;
+
+  padding: 12px;
+  border-radius: 12px;
+  border: none;
+
+  cursor: pointer;
+  font-weight: 600;
+
+  transition: all 0.3s ease;
+
+  box-shadow: 0 6px 15px rgba(59, 130, 246, 0.25);
+}
+
+.update-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 25px rgba(59, 130, 246, 0.35);
+}
+
+/* PASSWORD BUTTON */
+.change-btn {
+  background: linear-gradient(135deg, #60a5fa, #2563eb);
+  color: white;
+
+  padding: 12px;
+  border-radius: 12px;
+  border: none;
+
+  cursor: pointer;
+  font-weight: 600;
+
+  transition: all 0.3s ease;
+
+  box-shadow: 0 6px 15px rgba(37, 99, 235, 0.25);
+}
+
+.change-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 25px rgba(37, 99, 235, 0.35);
+}
+
+/* LOGOUT BUTTON */
+.logout-btn {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  color: white;
+
+  padding: 12px;
+  border-radius: 12px;
+  border: none;
+
+  cursor: pointer;
+  font-weight: 600;
+
+  transition: all 0.3s ease;
+
+  box-shadow: 0 6px 15px rgba(239, 68, 68, 0.25);
+}
+
+.logout-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 25px rgba(239, 68, 68, 0.35);
+}
+
+/* DIVIDER */
+.divider {
+  margin: 20px 0;
+  border: none;
+  height: 1px;
+  background: linear-gradient(to right, transparent, #e5e7eb, transparent);
+}
+
+/* PASSWORD SECTION */
+.password-form {
+  margin-top: 15px;
+  text-align: left;
+}
+
+.password-form h3 {
+  font-size: 16px;
+  margin-bottom: 10px;
+  color: #111827;
+}
+
+.password-form input {
+  width: 100%;
+  padding: 11px;
+  margin-bottom: 10px;
+
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+
+  transition: all 0.2s ease;
+}
+
+.password-form input:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 8px rgba(59, 130, 246, 0.25);
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .hw-profile-card {
+    width: 95%;
+    padding: 25px;
+  }
+
+  .profile-photo,
+  .photo-placeholder {
+    width: 95px;
+    height: 95px;
+  }
+}

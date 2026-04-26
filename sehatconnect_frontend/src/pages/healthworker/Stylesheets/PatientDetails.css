@@ -1,0 +1,102 @@
+.add-patient-container {
+  max-width: 1000px;
+  margin: auto;
+  padding: 25px;
+  background: #f6f9fc;
+  min-height: 100vh;
+}
+
+.header-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.header-row h2 {
+  color: #1f2d3d;
+}
+
+.back-btn {
+  border: none;
+  background: none;
+  color: #3498db;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* FORM */
+.add-patient-form {
+  background: white;
+  padding: 25px;
+  border-radius: 16px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+}
+
+/* GRID */
+.form-grid {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 25px;
+}
+
+/* PHOTO */
+.photo-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.preview-photo {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  border: 3px solid #1abc9c;
+  object-fit: cover;
+}
+
+/* FIELDS */
+.fields-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.fields-section label {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.fields-section input,
+.fields-section select {
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+}
+
+/* BUTTON */
+.next-btn {
+  margin-top: 20px;
+  width: 100%;
+  padding: 12px;
+  background: linear-gradient(135deg, #1abc9c, #16a085);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.next-btn:hover {
+  transform: translateY(-2px);
+}
+
+/* MOBILE */
+@media (max-width: 768px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .preview-photo {
+    margin: auto;
+  }
+}
