@@ -2,10 +2,10 @@ import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import HNavbar from "./HNavbar";
 import "./Stylesheets/AddPatient.css";
-import { v4 as uuidv4 } from "uuid";
+import axios from "axios";
 
 export default function AddPatient() {
-  const { id } = useParams(); // ✅ HEALTHWORKER ID FIX
+  const { id } = useParams();
   const navigate = useNavigate();
 
   const [form, setForm] = useState({
@@ -15,27 +15,35 @@ export default function AddPatient() {
     password: "",
   });
 
+  // ✅ MUST be inside component
   const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    setForm((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
   };
 
-  const handleNext = (e) => {
+  const handleNext = async (e) => {
     e.preventDefault();
 
-    const newId = uuidv4();
+    try {
+      const res = await axios.post(
+        "http://localhost:5000/api/patients",
+        {
+          ...form,
+          healthworkerId: id,
+        }
+      );
 
-    const basicInfo = {
-      ...form,
-      id: newId,
-      healthworkerId: id,
-    };
+      const newId = res.data.patient._id;
 
-    localStorage.setItem("patientBasic", JSON.stringify(basicInfo));
+      alert("Patient added successfully!");
 
-    alert("Patient added successfully!");
-
-    // ✅ FIXED ROUTE (includes healthworker id)
-    navigate(`/healthworker/${id}/patient/${newId}/details`);
+      navigate(`/healthworker/${id}/patient/${newId}/details`);
+    } catch (err) {
+      console.error(err);
+      alert(err.response?.data?.message || "Failed to save patient");
+    }
   };
 
   return (
@@ -44,44 +52,39 @@ export default function AddPatient() {
 
       <div className="add-patient-container">
         <h2>Add Patient</h2>
-        <p className="location">Location: Primary HealthCare Kolhapur</p>
 
-        <form className="add-patient-form" onSubmit={handleNext}>
-          <label>Full Name :</label>
+        <form onSubmit={handleNext} className="add-patient-form">
+
           <input
             name="fullName"
             value={form.fullName}
             onChange={handleChange}
-            required
+            placeholder="Full Name"
           />
 
-          <label>Email Id :</label>
           <input
             name="email"
-            type="email"
             value={form.email}
             onChange={handleChange}
-            required
+            placeholder="Email"
           />
 
-          <label>Phone no :</label>
           <input
             name="phone"
             value={form.phone}
             onChange={handleChange}
-            required
+            placeholder="Phone"
           />
 
-          <label>Password :</label>
           <input
             type="password"
             name="password"
             value={form.password}
             onChange={handleChange}
-            required
+            placeholder="Password"
           />
 
-          <button type="submit" className="next-btn">
+          <button type="submit">
             NEXT
           </button>
         </form>

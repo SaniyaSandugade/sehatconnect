@@ -9,6 +9,8 @@ export default function PatientDetails() {
   const navigate = useNavigate();
   const { pid } = useParams();
 
+  console.log("PID RECEIVED:", pid); // 🔥 DEBUG
+
   const [details, setDetails] = useState({
     fullName: "",
     dob: "",
@@ -31,47 +33,15 @@ export default function PatientDetails() {
   });
 
   /* FETCH */
- useEffect(() => {
-  const fetchPatient = async () => {
-    try {
-      const res = await API.get(`/patients/${pid}`);
-      const data = res.data;
+  useEffect(() => {
+    const fetchPatient = async () => {
+      try {
+        const res = await API.get(`/patients/${pid}`);
+        const data = res.data;
 
-      // ✅ CHECK IF DETAILS EXIST
-      const hasDetails =
-        data?.dob ||
-        data?.address ||
-        data?.contact ||
-        data?.gender;
-
-      if (!hasDetails) {
-        // ❌ No details → keep form empty
         setDetails({
           fullName: data.fullName || "",
-          age: "",
-          gender: "",
-          address: "",
-          contact: "",
-          maritalStatus: "",
-          occupation: "",
-          education: "",
-          pastConditions: "",
-          pastSurgeries: "",
-          longTermMeds: "",
-          allergies: "",
-          familyHistory: "",
-          lifestyle: "",
-          smoking: "",
-          alcohol: "",
-          diet: "",
-          photo: "",
-        });
-      } else {
-        // ✅ Details exist → fill form
-        setDetails({
-          fullName: data.fullName || "",
-          age: data.age || "",
-          dob: data.dob || "",
+          dob: data.dob ? data.dob.substring(0, 10) : "",
           gender: data.gender || "",
           address: data.address || "",
           contact: data.contact || "",
@@ -89,16 +59,15 @@ export default function PatientDetails() {
           diet: data.diet || "",
           photo: data.photo || "",
         });
+
+      } catch (error) {
+        console.error("FETCH ERROR:", error.response?.data || error.message);
+        alert("Failed to load patient details");
       }
+    };
 
-    } catch (error) {
-      console.error("Error fetching patient:", error);
-      alert("Failed to load patient details");
-    }
-  };
-
-  fetchPatient();
-}, [pid]);
+    fetchPatient();
+  }, [pid]);
 
   const handleChange = (e) => {
     setDetails({ ...details, [e.target.name]: e.target.value });
@@ -121,13 +90,16 @@ export default function PatientDetails() {
     e.preventDefault();
 
     try {
-      await API.put(`/patients/${pid}`, details);
+      const res = await API.put(`/patients/${pid}`, details);
+      console.log("UPDATE SUCCESS:", res.data);
+
       alert("Updated successfully");
       navigate(-1);
+
     } catch (err) {
-      alert("Update failed");
+      console.error("UPDATE ERROR:", err.response?.data || err.message);
+      alert(err.response?.data?.message || "Update failed");
     }
-    console.log("PID RECEIVED:", pid);
   };
 
   return (
@@ -147,7 +119,6 @@ export default function PatientDetails() {
 
           <div className="form-grid">
 
-            {/* PHOTO */}
             <div className="photo-section">
               <label>Patient Photo</label>
               <input type="file" onChange={handlePhotoUpload} />
@@ -156,7 +127,6 @@ export default function PatientDetails() {
               )}
             </div>
 
-            {/* FIELDS */}
             <div className="fields-section">
 
               <label>Full Name</label>
@@ -194,7 +164,6 @@ export default function PatientDetails() {
               <label>Education</label>
               <input name="education" value={details.education} onChange={handleChange} />
 
-              {/* MEDICAL */}
               <label>Past Conditions</label>
               <input name="pastConditions" value={details.pastConditions} onChange={handleChange} />
 
@@ -210,12 +179,12 @@ export default function PatientDetails() {
               <label>Family History</label>
               <input name="familyHistory" value={details.familyHistory} onChange={handleChange} />
 
-              {/* LIFESTYLE */}
               <label>Lifestyle</label>
               <input name="lifestyle" value={details.lifestyle} onChange={handleChange} />
 
               <label>Smoking</label>
               <select name="smoking" value={details.smoking} onChange={handleChange}>
+                <option value="">Select</option>
                 <option>Never</option>
                 <option>Former</option>
                 <option>Current</option>
@@ -223,6 +192,7 @@ export default function PatientDetails() {
 
               <label>Alcohol</label>
               <select name="alcohol" value={details.alcohol} onChange={handleChange}>
+                <option value="">Select</option>
                 <option>No</option>
                 <option>Occasional</option>
                 <option>Frequent</option>

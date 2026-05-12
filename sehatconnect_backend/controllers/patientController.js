@@ -1,5 +1,6 @@
 import Patient from "../models/Patient.js";
-import bcrypt from "bcryptjs"; // ✅ MISSING BEFORE (IMPORTANT)
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 import { sendPatientEmail } from "../utils/sendEmail.js";
 
 
@@ -8,6 +9,7 @@ import { sendPatientEmail } from "../utils/sendEmail.js";
 // ==========================
 export const createPatient = async (req, res) => {
   try {
+
     const {
       fullName,
       email,
@@ -17,15 +19,26 @@ export const createPatient = async (req, res) => {
       healthworkerId
     } = req.body;
 
-    // ✅ VALIDATION
+    // ==========================
+    // VALIDATION
+    // ==========================
     if (!fullName || !email || !phone || !password) {
       return res.status(400).json({
         message: "All fields required"
       });
     }
 
-    // ✅ CHECK EXISTING
-    const existing = await Patient.findOne({ email });
+    // ==========================
+    // NORMALIZE EMAIL
+    // ==========================
+    const normalizedEmail = email.trim().toLowerCase();
+
+    // ==========================
+    // CHECK EXISTING
+    // ==========================
+    const existing = await Patient.findOne({
+      email: normalizedEmail
+    });
 
     if (existing) {
       return res.status(400).json({
@@ -33,14 +46,22 @@ export const createPatient = async (req, res) => {
       });
     }
 
-    // 🔐 HASH PASSWORD
+    // ==========================
+    // HASH PASSWORD
+    // ==========================
     const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
 
-    // ✅ CREATE PATIENT
+    const hashedPassword = await bcrypt.hash(
+      password,
+      salt
+    );
+
+    // ==========================
+    // CREATE PATIENT
+    // ==========================
     const patient = await Patient.create({
       fullName,
-      email,
+      email: normalizedEmail,
       phone,
       password: hashedPassword,
       doctorId,
@@ -48,25 +69,138 @@ export const createPatient = async (req, res) => {
     });
 
     // ==========================
-    // 📧 SEND EMAIL (BREVO)
+    // SEND EMAIL
     // ==========================
     try {
-      await sendPatientEmail(email, fullName, password);
+
+      await sendPatientEmail(
+        normalizedEmail,
+        fullName,
+        password
+      );
+
       console.log("✅ Email sent to patient");
+
     } catch (emailErr) {
-      console.error("❌ Email failed:", emailErr.message);
-      // ⚠️ Don't fail API if email fails
+
+      console.error(
+        "❌ Email failed:",
+        emailErr.message
+      );
     }
 
+    // ==========================
+    // RESPONSE
+    // ==========================
     res.status(201).json({
       message: "Patient created successfully ✅",
       patient
     });
 
   } catch (err) {
-    console.error("CREATE PATIENT ERROR:", err);
+
+    console.error(
+      "CREATE PATIENT ERROR:",
+      err
+    );
+
     res.status(500).json({
       message: "Error creating patient"
+    });
+  }
+};
+
+
+// ==========================
+// PATIENT LOGIN
+// ==========================
+export const patientLogin = async (req, res) => {
+  try {
+
+    const { email, password } = req.body;
+
+    // ==========================
+    // VALIDATION
+    // ==========================
+    if (!email || !password) {
+      return res.status(400).json({
+        message: "Email and password required"
+      });
+    }
+
+    // ==========================
+    // NORMALIZE EMAIL
+    // ==========================
+    const normalizedEmail = email.trim().toLowerCase();
+
+    // ==========================
+    // FIND PATIENT
+    // ==========================
+    const patient = await Patient.findOne({
+      email: normalizedEmail
+    });
+
+    if (!patient) {
+      return res.status(404).json({
+        message: "Patient not found"
+      });
+    }
+
+    // ==========================
+    // CHECK PASSWORD
+    // ==========================
+    const isMatch = await bcrypt.compare(
+      password,
+      patient.password
+    );
+
+    if (!isMatch) {
+      return res.status(401).json({
+        message: "Invalid credentials"
+      });
+    }
+
+    // ==========================
+    // GENERATE TOKEN
+    // ==========================
+    const token = jwt.sign(
+      {
+        id: patient._id,
+        role: "patient"
+      },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: "7d"
+      }
+    );
+
+    // ==========================
+    // REMOVE PASSWORD
+    // ==========================
+    const patientData = {
+      ...patient._doc
+    };
+
+    delete patientData.password;
+
+    // ==========================
+    // RESPONSE
+    // ==========================
+    res.json({
+      message: "Patient login successful ✅",
+      token,
+      patient: patientData
+    });
+
+  } catch (err) {
+
+    console.error(
+      "PATIENT LOGIN ERROR:",
+      err
+    );
+
+    res.status(500).json({
+      message: "Server error"
     });
   }
 };
@@ -77,11 +211,18 @@ export const createPatient = async (req, res) => {
 // ==========================
 export const getAllPatients = async (req, res) => {
   try {
+
     const patients = await Patient.find();
+
     res.json(patients);
+
   } catch (err) {
+
     console.error("GET ALL ERROR:", err);
-    res.status(500).json({ error: err.message });
+
+    res.status(500).json({
+      error: err.message
+    });
   }
 };
 
@@ -91,7 +232,10 @@ export const getAllPatients = async (req, res) => {
 // ==========================
 export const getPatientById = async (req, res) => {
   try {
-    const patient = await Patient.findById(req.params.id);
+
+    const patient = await Patient.findById(
+      req.params.id
+    );
 
     if (!patient) {
       return res.status(404).json({
@@ -99,10 +243,20 @@ export const getPatientById = async (req, res) => {
       });
     }
 
-    res.json(patient);
+    res.json({
+  patient,
+});
+
   } catch (err) {
-    console.error("GET BY ID ERROR:", err);
-    res.status(500).json({ error: err.message });
+
+    console.error(
+      "GET BY ID ERROR:",
+      err
+    );
+
+    res.status(500).json({
+      error: err.message
+    });
   }
 };
 
@@ -112,7 +266,11 @@ export const getPatientById = async (req, res) => {
 // ==========================
 export const deletePatient = async (req, res) => {
   try {
-    const deleted = await Patient.findByIdAndDelete(req.params.id);
+
+    const deleted =
+      await Patient.findByIdAndDelete(
+        req.params.id
+      );
 
     if (!deleted) {
       return res.status(404).json({
@@ -125,8 +283,12 @@ export const deletePatient = async (req, res) => {
     });
 
   } catch (err) {
+
     console.error("DELETE ERROR:", err);
-    res.status(500).json({ error: err.message });
+
+    res.status(500).json({
+      error: err.message
+    });
   }
 };
 
@@ -136,11 +298,13 @@ export const deletePatient = async (req, res) => {
 // ==========================
 export const updatePatient = async (req, res) => {
   try {
-    const updated = await Patient.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      { new: true }
-    );
+
+    const updated =
+      await Patient.findByIdAndUpdate(
+        req.params.id,
+        req.body,
+        { new: true }
+      );
 
     if (!updated) {
       return res.status(404).json({
@@ -148,10 +312,16 @@ export const updatePatient = async (req, res) => {
       });
     }
 
-    res.json(updated);
+    res.json({
+  patient: updated,
+});
 
   } catch (err) {
+
     console.error("UPDATE ERROR:", err);
-    res.status(500).json({ error: err.message });
+
+    res.status(500).json({
+      error: err.message
+    });
   }
 };

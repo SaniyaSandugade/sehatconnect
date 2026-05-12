@@ -1,25 +1,52 @@
 import express from "express";
+
 import {
   createPatient,
   getAllPatients,
   getPatientById,
   deletePatient,
-  updatePatient
+  updatePatient,
+  patientLogin,
 } from "../controllers/patientController.js";
 
 const router = express.Router();
 
-// CREATE
+/* =========================
+   LOGIN
+========================= */
+router.post("/login", patientLogin);
+
+/* =========================
+   CREATE
+========================= */
 router.post("/", createPatient);
 
-// READ
+/* =========================
+   GET ALL
+========================= */
 router.get("/", getAllPatients);
+
+/* =========================
+   PROFILE ROUTES
+========================= */
+
+// ✅ GET PROFILE
+router.get("/profile/:id", getPatientById);
+
+// ✅ UPDATE PROFILE
+router.put("/profile/:id", updatePatient);
+
+// ✅ DELETE PROFILE
+router.delete("/profile/:id", deletePatient);
+
+/* =========================
+   NORMAL ROUTES
+========================= */
+
 router.get("/:id", getPatientById);
 
-// UPDATE
 router.put("/:id", updatePatient);
 
-// DELETE
 router.delete("/:id", deletePatient);
 
 export default router;

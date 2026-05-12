@@ -8,33 +8,58 @@ const checkupSchema = new mongoose.Schema(
       required: true,
     },
 
-    // ✅ SUPPORT BOTH ROLES
     healthWorkerId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "HealthWorker",
+      required: true,
     },
 
-    doctorId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Doctor",
+    healthWorkerName: String,
+
+    age: Number,
+
+    gender: {
+      type: String,
+      enum: ["Male", "Female", "Other"],
     },
 
-    // ✅ VITALS
-    systolic: Number,
-    diastolic: Number,
     heartRate: Number,
-    spo2: Number,
 
-    // ✅ EXTRA VITALS
-    height: Number,
-    weight: Number,
+    respiratoryRate: Number,
+
     temperature: Number,
 
-    bmi: Number,
-    remarks: String,
+    spo2: Number,
+
+    systolic: Number,
+
+    diastolic: Number,
+
+    weight: Number,
+
+    height: Number,
+
+    derivedHRV: Number,
+
+    derivedPulsePressure: Number,
+
+    derivedBMI: Number,
+
+    derivedMAP: Number,
+
+    riskCategory: {
+      type: String,
+      enum: ["Low", "Medium", "High"],
+      default: "Low",
+    },
+
     otherSymptoms: String,
+
+    remarks: String,
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+  }
 );
 
 export default mongoose.model("Checkup", checkupSchema);

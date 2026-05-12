@@ -1,0 +1,112 @@
+.add-patient-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  margin-top: 60px;
+  width: 100%;
+}
+
+.header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 80%;
+  max-width: 700px;
+  margin-bottom: 20px;
+}
+.header-row h2{
+  width:100%;
+  align-items: center;
+}
+
+.back-btn {
+  background: none;
+  border: none;
+  color: #007bff;
+  font-size: 16px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: color 0.2s;
+}
+
+.back-btn:hover {
+  color: #0056b3;
+}
+
+.page-title {
+  font-size: 32px;
+  font-weight: 700;
+  text-align: center;
+  line-height: 1.2;
+  flex: 1;
+  color: #111;
+}
+
+.add-patient-form {
+  background: white;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  padding: 30px 40px;
+  border-radius: 12px;
+  width: 80%;
+  max-width: 650px;
+}
+
+.add-patient-form label {
+  display: block;
+  margin-top: 14px;
+  font-weight: 500;
+  color: #333;
+}
+
+.add-patient-form input,
+.add-patient-form select,
+.add-patient-form textarea {
+  width: 100%;
+  padding: 10px 12px;
+  margin-top: 6px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 15px;
+  outline: none;
+}
+
+.add-patient-form input:focus,
+.add-patient-form select:focus,
+.add-patient-form textarea:focus {
+  border-color: #1abc9c;
+  box-shadow: 0 0 5px rgba(26,188,156,0.3);
+}
+
+.next-btn, .save-btn {
+  margin-top: 25px;
+  width: 100%;
+  padding: 12px;
+  background-color: #1abc9c;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 16px;
+  transition: background 0.3s;
+}
+
+.next-btn:hover, .save-btn:hover {
+  background-color: #17a589;
+}
+
+.location {
+  text-align: right;
+  width: 80%;
+  font-weight: 500;
+  margin-top: 10px;
+}
+
+.preview-photo {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 20%;
+  border: 2px solid #1abc9c;
+  margin-top: 10px;
+}

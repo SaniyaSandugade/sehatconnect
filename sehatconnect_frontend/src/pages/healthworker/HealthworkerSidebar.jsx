@@ -1,35 +1,33 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import API from "../../services/api";
 import "./Stylesheets/HealthworkerSidebar.css";
-import defaultAvatar from "../../assets/images/healthworker.jpg";
+
 
 const HealthworkerSidebar = ({ isOpen, onClose }) => {
   const [profile, setProfile] = useState(null);
+
   const navigate = useNavigate();
   const { id } = useParams();
 
-  // ✅ LOAD FROM LOCALSTORAGE (FAST + SAFE)
-  const loadProfile = () => {
-    const stored = JSON.parse(localStorage.getItem("hwData"));
-    if (stored?.healthworker) {
-      setProfile(stored.healthworker);
+  // =========================
+  // LOAD PROFILE FROM DB
+  // =========================
+  const loadProfile = useCallback(async () => {
+    try {
+      if (!id) return;
+
+      const res = await API.get(`/healthworkers/profile/${id}`);
+      setProfile(res?.data?.healthworker);
+
+    } catch (err) {
+      console.log("Healthworker sidebar error:", err);
     }
-  };
+  }, [id]);
 
   useEffect(() => {
     loadProfile();
-
-    // 🔥 listen for updates from profile page
-    const handleUpdate = () => {
-      loadProfile();
-    };
-
-    window.addEventListener("profileUpdated", handleUpdate);
-
-    return () => {
-      window.removeEventListener("profileUpdated", handleUpdate);
-    };
-  }, []);
+  }, [loadProfile]);
 
   return (
     <div className={`sidebar ${isOpen ? "open" : ""}`}>
@@ -37,8 +35,12 @@ const HealthworkerSidebar = ({ isOpen, onClose }) => {
       {/* HEADER */}
       <div className="sidebar-header">
 
+        {/* ✅ UPDATED IMAGE LOGIC (LIKE PATIENT SIDEBAR STYLE) */}
         <img
-          src={profile?.profilePic || defaultAvatar}
+          src={
+            profile?.profilePic ||
+            `https://ui-avatars.com/api/?name=${profile?.fullName || "Health Worker"}`
+          }
           alt="healthworker"
           className="sidebar-avatar"
         />
@@ -90,6 +92,7 @@ const HealthworkerSidebar = ({ isOpen, onClose }) => {
         </li>
 
       </ul>
+
     </div>
   );
 };

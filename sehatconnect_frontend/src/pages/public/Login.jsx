@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Eye, EyeOff } from "lucide-react"; 
+import { Eye, EyeOff } from "lucide-react";
 import API from "../../services/api";
 import "./Login.css";
 import logo from "../../assets/images/logo-512.png";
@@ -9,110 +9,168 @@ const Login = () => {
   const [role, setRole] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false); 
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
+
     if (loading) return;
-    setLoading(true);
 
     if (!role) {
       alert("Please select your role!");
-      setLoading(false);
       return;
     }
 
+    setLoading(true);
+
     try {
-      // Select endpoint based on role
+      // ✅ Correct endpoints
       let endpoint = "";
+
       switch (role) {
-        case "admin": endpoint = "/admin/login"; break;
-        case "doctor": endpoint = "/doctors/login"; break;
-        case "healthworker": endpoint = "/healthworkers/login"; break;
-        case "patient": endpoint = "/patient/login"; break;
-        default: endpoint = "/api/auth/login";
+        case "admin":
+          endpoint = "/admin/login";
+          break;
+
+        case "doctor":
+          endpoint = "/doctors/login";
+          break;
+
+        case "healthworker":
+          endpoint = "/healthworkers/login";
+          break;
+
+        // ✅ FIXED (was /patient/login)
+        case "patient":
+          endpoint = "/patients/login";
+          break;
+
+        default:
+          endpoint = "/auth/login";
       }
 
-      // API Call
-      const res = await API.post(endpoint, { email, password });
+      // ✅ API request
+      const res = await API.post(endpoint, {
+        email,
+        password,
+      });
 
-      // Get correct user object depending on role
-      let userData;
+      // ✅ Get user object
+      let userData = null;
+
       switch (role) {
-        case "healthworker":
-          userData = res.data.hw;
-          break;
-        case "doctor":
-          userData = res.data.doctor;
-          break;
         case "admin":
           userData = res.data.admin;
           break;
+
+        case "doctor":
+          userData = res.data.doctor;
+          break;
+
+        case "healthworker":
+          userData = res.data.hw;
+          break;
+
         case "patient":
           userData = res.data.patient;
           break;
+
         default:
           userData = res.data.user;
       }
 
       if (!userData) {
-        throw new Error(res.data.message || "Login failed: no user returned");
+        alert("Invalid login response");
+        setLoading(false);
+        return;
       }
 
-      // Save token + role
-      localStorage.setItem("role", role);
+      // ✅ Save token
       localStorage.setItem("token", res.data.token);
 
-      // Save user data in localStorage
-      if (role === "healthworker") {
-        localStorage.setItem("hwData", JSON.stringify({ healthworker: userData }));
-      }else if (role === "doctor") {
+      // ✅ Save role
+      localStorage.setItem("role", role);
 
-  localStorage.setItem("doctorId", userData._id);
+      // =========================
+      // ADMIN
+      // =========================
+      if (role === "admin") {
+        localStorage.setItem(
+          "adminData",
+          JSON.stringify({
+            admin: userData,
+          })
+        );
 
-  // Full doctor data (optional)
-  localStorage.setItem("doctorData", JSON.stringify({ doctor: userData }));
-
-  // Sidebar profile data
-  localStorage.setItem(
-    "doctorProfile",
-    JSON.stringify({
-      id: userData._id,   // ⭐ ADD THIS ALSO
-      name: userData.fullName,
-      email: userData.email,
-      profilePic: userData.photo,
-    })
-  );
-
-} else if (role === "admin") {
-        localStorage.setItem("adminData", JSON.stringify({ admin: userData }));
-      } else if (role === "patient") {
-        localStorage.setItem("patientData", JSON.stringify({ patient: userData }));
+        navigate(`/admin/${userData._id}`);
       }
 
-      // Navigate after login
-      switch (role) {
-        case "admin":
-          navigate(`/admin/${userData._id}`);
-          break;
-        case "doctor":
-          navigate(`/doctor/${userData._id}`);
-          break;
-        case "healthworker":
-          navigate(`/healthworker/${userData._id}`);
-          break;
-        case "patient":
-          navigate(`/patient/${userData._id}`);
-          break;
-        default:
-          navigate("/");
+      // =========================
+      // DOCTOR
+      // =========================
+      else if (role === "doctor") {
+        localStorage.setItem("doctorId", userData._id);
+
+        localStorage.setItem(
+          "doctorData",
+          JSON.stringify({
+            doctor: userData,
+          })
+        );
+
+        localStorage.setItem(
+          "doctorProfile",
+          JSON.stringify({
+            id: userData._id,
+            name: userData.fullName,
+            email: userData.email,
+            profilePic: userData.photo,
+          })
+        );
+
+        navigate(`/doctor/${userData._id}`);
+      }
+
+      // =========================
+      // HEALTHWORKER
+      // =========================
+      else if (role === "healthworker") {
+        localStorage.setItem(
+          "hwData",
+          JSON.stringify({
+            healthworker: userData,
+          })
+        );
+
+        navigate(`/healthworker/${userData._id}`);
+      }
+
+      // =========================
+      // PATIENT
+      // =========================
+      else if (role === "patient") {
+        localStorage.setItem(
+          "patientData",
+          JSON.stringify({
+            patient: userData,
+          })
+        );
+
+        localStorage.setItem("patientId", userData._id);
+
+        navigate(`/patient/${userData._id}`);
       }
 
     } catch (error) {
-      console.error(error);
-      alert(error.message || "Login failed!");
+      console.error("LOGIN ERROR:", error);
+
+      alert(
+        error.response?.data?.message ||
+        "Login failed. Please check email/password."
+      );
     } finally {
       setLoading(false);
     }
@@ -121,19 +179,37 @@ const Login = () => {
   return (
     <div className="login-page">
       <div className="login-card">
-        <button className="back-btn" onClick={() => navigate("/")}>
+
+        <button
+          className="back-btn"
+          onClick={() => navigate("/")}
+        >
           ← Back
         </button>
 
         <div className="login-header">
-          <img src={logo} alt="SehatConnect logo" className="login-logo" />
-          <h1 className="app-title">SehatConnect</h1>
+          <img
+            src={logo}
+            alt="SehatConnect logo"
+            className="login-logo"
+          />
+
+          <h1 className="app-title">
+            SehatConnect
+          </h1>
         </div>
 
-        <h2 className="login-title">LOGIN</h2>
+        <h2 className="login-title">
+          LOGIN
+        </h2>
 
-        <form className="login-form" onSubmit={handleLogin}>
+        <form
+          className="login-form"
+          onSubmit={handleLogin}
+        >
+
           <label>Email Id :</label>
+
           <input
             type="email"
             placeholder="Enter your mail ID"
@@ -143,49 +219,85 @@ const Login = () => {
           />
 
           <label>Password :</label>
-          <div className="password-container" style={{ position: "relative" }}>
+
+          <div
+            className="password-container"
+            style={{ position: "relative" }}
+          >
+
             <input
               type={showPassword ? "text" : "password"}
               placeholder="Enter your Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              style={{ width: "100%", paddingRight: "35px" }}
+              style={{
+                width: "100%",
+                paddingRight: "40px",
+              }}
             />
+
             <span
-              onClick={() => setShowPassword(!showPassword)}
-              className="eye-icon"
+              onClick={() =>
+                setShowPassword(!showPassword)
+              }
               style={{
                 position: "absolute",
                 right: "10px",
-                top: "38%",
+                top: "50%",
                 transform: "translateY(-50%)",
                 cursor: "pointer",
                 color: "#555",
               }}
             >
-              {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+              {showPassword ? (
+                <EyeOff size={20} />
+              ) : (
+                <Eye size={20} />
+              )}
             </span>
+
           </div>
 
           <label>Select your role :</label>
+
           <select
             value={role}
             onChange={(e) => setRole(e.target.value)}
             required
           >
-            <option value="">-- Select your role --</option>
-            <option value="patient">Patient</option>
-            <option value="doctor">Doctor</option>
-            <option value="healthworker">Healthworker</option>
-            <option value="admin">Admin</option>
+            <option value="">
+              -- Select your role --
+            </option>
+
+            <option value="patient">
+              Patient
+            </option>
+
+            <option value="doctor">
+              Doctor
+            </option>
+
+            <option value="healthworker">
+              Healthworker
+            </option>
+
+            <option value="admin">
+              Admin
+            </option>
           </select>
 
-          <p className="forgot-password">Forgot your password?</p>
+          <p className="forgot-password">
+            Forgot your password?
+          </p>
 
-          <button type="submit" disabled={loading}>
+          <button
+            type="submit"
+            disabled={loading}
+          >
             {loading ? "Logging in..." : "Log in"}
           </button>
+
         </form>
       </div>
     </div>

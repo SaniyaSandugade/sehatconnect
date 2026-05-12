@@ -40,6 +40,7 @@ app.use("/api/healthworkers", healthworkerRoutes);
 app.use("/api/healthcamps", healthCampRoutes);
 app.use("/api/checkups", checkupRoutes);
 app.use("/api/patients", patientRoutes);
+app.use("/uploads", express.static("uploads"));
 
 // ✅ ROOT
 app.get("/", (req, res) => {

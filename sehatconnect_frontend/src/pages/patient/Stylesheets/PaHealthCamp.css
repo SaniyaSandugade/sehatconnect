@@ -1,0 +1,83 @@
+/* FULL PAGE */
+.layout {
+  background: #f5f7fb;
+  min-height: 100vh;
+}
+
+/* NAVBAR FIX */
+.layout > nav {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
+}
+
+/* BODY */
+.container {
+  display: flex;
+  margin-top: 60px; /* navbar height */
+}
+
+/* SIDEBAR SPACE HANDLING */
+.main {
+  flex: 1;
+  padding: 20px;
+  transition: 0.3s;
+}
+
+.main.shift {
+  margin-left: 220px; /* same as sidebar width */
+}
+
+/* TOP BAR */
+.topbar {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.topbar button {
+  font-size: 20px;
+  background: #1976d2;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* TABLE */
+.table-wrapper {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+thead {
+  background: #f0f4ff;
+}
+
+th, td {
+  padding: 12px;
+  text-align: left;
+}
+
+th {
+  color: #333;
+}
+
+tr {
+  border-bottom: 1px solid #eee;
+}
+
+tr:hover {
+  background: #fafafa;
+}

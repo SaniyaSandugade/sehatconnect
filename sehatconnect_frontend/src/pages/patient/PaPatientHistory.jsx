@@ -1,17 +1,17 @@
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import React, { useEffect, useState } from "react";
 import API from "../../services/api";
-import HNavbar from "./HNavbar";
-import "./Stylesheets/PatientHistory.css"; // ✅ reuse same CSS
+import PaNavbar from "./PaNavbar";
+import "./Stylesheets/PaPatientHistory.css";
 
-export default function CheckupHistory() {
-  const { pid } = useParams();
+export default function PaPatientHistory() {
+  const patientId = localStorage.getItem("userId");
   const [checkups, setCheckups] = useState([]);
 
   useEffect(() => {
     const fetchHistory = async () => {
       try {
-        const res = await API.get(`/checkups/${pid}`);
+        if (!patientId) return;
+        const res = await API.get(`/checkups/${patientId}`);
         setCheckups(Array.isArray(res.data) ? res.data : []);
       } catch (err) {
         console.log(err);
@@ -20,9 +20,8 @@ export default function CheckupHistory() {
     };
 
     fetchHistory();
-  }, [pid]);
+  }, [patientId]);
 
-  // ✅ SAME STATUS LOGIC
   const getStatus = (type, value) => {
     if (type === "bp") return value > 130 ? "high" : "normal";
     if (type === "hr") return value > 100 ? "high" : "normal";
@@ -32,14 +31,14 @@ export default function CheckupHistory() {
 
   return (
     <div>
-      <HNavbar />
+      <PaNavbar />
 
       <div className="history-container">
 
         {/* HEADER */}
         <div className="history-header">
-          <h2>📊 Patient Health Timeline</h2>
-          <p>View patient vitals and history records</p>
+          <h2>📊 Health Timeline</h2>
+          <p>Track your vitals and monitor your progress over time</p>
         </div>
 
         {checkups.length === 0 ? (
@@ -54,7 +53,7 @@ export default function CheckupHistory() {
               return (
                 <div className="history-card" key={c._id}>
 
-                  {/* DATE */}
+                  {/* DATE BADGE */}
                   <div className="card-date">
                     {new Date(c.createdAt).toLocaleDateString()}
                   </div>
