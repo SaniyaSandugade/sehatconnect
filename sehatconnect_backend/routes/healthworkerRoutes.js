@@ -1,6 +1,8 @@
 import express from "express";
 import multer from "multer";
 import HealthWorker from "../models/Healthworker.js";
+import { sendHealthworkerEmail } from "../utils/sendEmail.js";
+import jwt from "jsonwebtoken";
 
 const router = express.Router();
 
@@ -12,6 +14,63 @@ const storage = multer.memoryStorage();
 
 const upload = multer({
   storage,
+});
+
+
+/* =========================
+   LOGIN
+========================= */
+
+router.post("/login", async (req, res) => {
+  try {
+
+    const { email, password } = req.body;
+
+    // FIND USER
+    const hw = await HealthWorker.findOne({
+      email: email.toLowerCase(),
+    });
+
+    if (!hw) {
+      return res.status(404).json({
+        message: "Healthworker not found",
+      });
+    }
+
+    // CHECK PASSWORD
+    if (hw.password !== password) {
+      return res.status(401).json({
+        message: "Invalid password",
+      });
+    }
+
+    // TOKEN
+    const token = jwt.sign(
+      {
+        id: hw._id,
+        role: "healthworker",
+      },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: "7d",
+      }
+    );
+
+    // RESPONSE
+    res.json({
+      message: "Login successful",
+      token,
+      hw,
+    });
+
+  } catch (err) {
+
+    console.log("LOGIN ERROR:", err);
+
+    res.status(500).json({
+      message: err.message,
+    });
+  }
 });
 
 /* =========================
@@ -27,7 +86,10 @@ router.post(
       console.log("BODY:", req.body);
       console.log("FILE:", req.file);
 
+      // =========================
       // CHECK EMAIL
+      // =========================
+
       const existing =
         await HealthWorker.findOne({
           email: req.body.email.toLowerCase(),
@@ -39,7 +101,10 @@ router.post(
         });
       }
 
+      // =========================
       // IMAGE
+      // =========================
+
       let profilePhoto = "";
 
       if (req.file) {
@@ -47,7 +112,10 @@ router.post(
           `data:${req.file.mimetype};base64,${req.file.buffer.toString("base64")}`;
       }
 
-      // CREATE
+      // =========================
+      // CREATE HEALTHWORKER
+      // =========================
+
       const newHW = new HealthWorker({
         fullName: req.body.fullName,
 
@@ -65,7 +133,25 @@ router.post(
         profilePhoto,
       });
 
+      // =========================
+      // SAVE
+      // =========================
+
       await newHW.save();
+
+      // =========================
+      // SEND EMAIL
+      // =========================
+
+      await sendHealthworkerEmail(
+        newHW.email,
+        newHW.fullName,
+        req.body.password
+      );
+
+      // =========================
+      // RESPONSE
+      // =========================
 
       res.status(201).json({
         message:
