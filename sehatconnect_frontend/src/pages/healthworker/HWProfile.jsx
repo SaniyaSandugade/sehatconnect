@@ -1,257 +1,439 @@
-import React, { useState, useEffect } from "react";
+import React, {
+  useEffect,
+  useState,
+  useCallback,
+} from "react";
+
+import API from "../../services/api";
+
 import HNavbar from "./HNavbar";
 import HealthworkerSidebar from "./HealthworkerSidebar";
-import API from "../../services/api";
+
 import "./Stylesheets/HWProfile.css";
 
-export default function HWProfile() {
-  const [isEditing, setIsEditing] = useState(false);
+const HWProfile = () => {
 
-  const [profile, setProfile] = useState({
-    _id: "",
-    name: "",
-    email: "",
-    healthcareCenter: "",
-    location: "",
-    phone: "",
-    profilePic: "",
-  });
+  const [healthworker, setHealthworker] =
+    useState({});
 
-  const [passwordData, setPasswordData] = useState({
-    oldPassword: "",
-    newPassword: "",
-  });
+  const [editData, setEditData] =
+    useState({});
 
-  // ✅ LOAD PROFILE (FIXED SAFE VERSION)
-// ONLY showing IMPORTANT fixed parts
+  const [editMode, setEditMode] =
+    useState(false);
 
-// ✅ FETCH PROFILE
-useEffect(() => {
-  const fetchProfile = async () => {
-    try {
-      const stored = JSON.parse(localStorage.getItem("hwData"));
-      const id = stored?.healthworker?._id;
+  const [sidebarOpen, setSidebarOpen] =
+    useState(false);
 
-      if (!id) {
-        alert("Please login again");
-        return;
+  const [photoFile, setPhotoFile] =
+    useState(null);
+
+  const [password, setPassword] =
+    useState("");
+
+  // =========================
+  // GET ID
+  // =========================
+
+  const stored = JSON.parse(
+    localStorage.getItem("hwData")
+  );
+
+  const healthworkerId =
+    stored?.healthworker?._id;
+
+  // =========================
+  // FETCH PROFILE
+  // =========================
+
+  const fetchProfile = useCallback(
+    async () => {
+
+      try {
+
+        const res = await API.get(
+          `/healthworkers/${healthworkerId}`
+        );
+
+        setHealthworker(res.data);
+
+        setEditData(res.data);
+
+      } catch (err) {
+
+        console.log(err);
+
       }
 
-      const res = await API.get(`/healthworkers/${id}`);
-      setProfile(res.data);
+    },
+    [healthworkerId]
+  );
 
-      localStorage.setItem(
-        "hwData",
-        JSON.stringify({ healthworker: res.data })
-      );
+  useEffect(() => {
+
+    fetchProfile();
+
+  }, [fetchProfile]);
+
+  // =========================
+  // UPDATE PROFILE
+  // =========================
+
+  const handleUpdate = async () => {
+
+    try {
+
+      const updatedData = {
+        ...editData,
+      };
+
+      // IMAGE
+      if (photoFile) {
+
+        const reader = new FileReader();
+
+        reader.onloadend = async () => {
+
+          updatedData.profilePhoto =
+            reader.result;
+
+          saveProfile(updatedData);
+
+        };
+
+        reader.readAsDataURL(photoFile);
+
+      } else {
+
+        saveProfile(updatedData);
+
+      }
 
     } catch (err) {
-      console.log("Failed to load profile", err);
+
+      console.log(err);
+
+      alert("Update Failed");
+
     }
+
   };
 
-  fetchProfile();
-}, []);
-  const handleChange = (e) => {
-    setProfile({ ...profile, [e.target.name]: e.target.value });
-  };
+  // =========================
+  // SAVE FUNCTION
+  // =========================
 
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
+  const saveProfile = async (
+    updatedData
+  ) => {
 
-    const reader = new FileReader();
-    reader.onload = () => {
-      setProfile({ ...profile, profilePic: reader.result });
-    };
-    reader.readAsDataURL(file);
-  };
-
-  // ✅ SAVE PROFILE (FULL FIX)
-  const handleSave = async () => {
     try {
-      const userId = profile?._id;
 
-      if (!userId) {
-        alert("Profile not loaded properly. Please login again.");
-        return;
+      if (password) {
+        updatedData.password = password;
       }
 
       const res = await API.put(
-        `/healthworkers/${userId}`,
-        profile
+        `/healthworkers/${healthworkerId}`,
+        updatedData
       );
 
-      const updated = res.data;
+      const updatedHW = res.data;
 
-      setProfile(updated);
+      setHealthworker(updatedHW);
 
-      // 🔥 SYNC LOCAL STORAGE
+      setEditData(updatedHW);
+
+      // UPDATE STORAGE
       localStorage.setItem(
         "hwData",
-        JSON.stringify({ healthworker: updated })
+        JSON.stringify({
+          healthworker: updatedHW,
+        })
       );
 
-      // 🔥 SYNC SIDEBAR
-      window.dispatchEvent(new Event("profileUpdated"));
+      // REFRESH SIDEBAR
+      window.dispatchEvent(
+        new Event("storage")
+      );
 
-      alert("Profile updated successfully!");
-      setIsEditing(false);
+      alert("Profile Updated ✅");
+
+      setEditMode(false);
+
+      setPassword("");
+
+      setPhotoFile(null);
 
     } catch (err) {
+
       console.log(err);
-      alert("Failed to update profile");
+
+      alert("Profile Update Failed");
+
     }
+
   };
 
-  const handlePasswordChange = (e) => {
-    setPasswordData({
-      ...passwordData,
-      [e.target.name]: e.target.value,
-    });
+  // =========================
+  // CANCEL
+  // =========================
+
+  const handleCancel = () => {
+
+    setEditData(healthworker);
+
+    setEditMode(false);
+
+    setPassword("");
+
+    setPhotoFile(null);
+
   };
 
-  const handleChangePassword = async () => {
+  // =========================
+  // DELETE
+  // =========================
+
+  const handleDelete = async () => {
+
+    if (
+      !window.confirm(
+        "Are you sure?"
+      )
+    )
+      return;
+
     try {
-      await API.put("/auth/change-password", passwordData);
 
-      alert("Password updated successfully!");
-      setPasswordData({ oldPassword: "", newPassword: "" });
+      await API.delete(
+        `/healthworkers/${healthworkerId}`
+      );
+
+      alert("Profile Deleted");
+
+      localStorage.clear();
+
+      window.location.href =
+        "/login";
 
     } catch (err) {
-      console.log(err);
-      alert("Failed to update password");
-    }
-  };
 
-  const handleLogout = () => {
-    localStorage.clear();
-    window.location.href = "/login";
+      console.log(err);
+
+    }
+
   };
 
   return (
-    <div>
+    <div className="doctor-dashboard">
+
       <HNavbar />
 
-      <div className="hw-layout">
-        <HealthworkerSidebar />
+      <HealthworkerSidebar
+        isOpen={sidebarOpen}
+        onClose={() =>
+          setSidebarOpen(false)
+        }
+      />
 
-        <div className="hw-profile-container">
-          <div className="hw-profile-card">
+      <div className="doctor-body">
 
-            {/* PHOTO */}
-            <div className="profile-photo-section">
-              {profile.profilePic ? (
+        <div className="doctor-main">
+
+          <div className="dp-container">
+
+            <div className="dp-card">
+
+              {/* =========================
+                  TOP
+              ========================= */}
+
+              <div className="dp-top">
+
                 <img
-                  src={profile.profilePic}
-                  alt="profile"
-                  className="profile-photo"
+                  src={
+                    photoFile
+                      ? URL.createObjectURL(
+                          photoFile
+                        )
+                      : healthworker.profilePhoto ||
+                        "https://ui-avatars.com/api/?name=Healthworker"
+                  }
+                  alt="healthworker"
+                  className="dp-image"
                 />
-              ) : (
-                <div className="photo-placeholder">📷</div>
-              )}
 
-              {isEditing && (
-                <input type="file" onChange={handleImageChange} />
-              )}
+                {editMode && (
+                  <input
+                    type="file"
+                    onChange={(e) =>
+                      setPhotoFile(
+                        e.target.files[0]
+                      )
+                    }
+                  />
+                )}
+
+                <h2>
+                  {healthworker.fullName}
+                </h2>
+
+                <p>
+                  Healthworker
+                </p>
+
+              </div>
+
+              {/* =========================
+                  TABLE
+              ========================= */}
+
+              <div className="dp-table">
+
+                {[
+                  ["Email", "email"],
+                  ["Phone", "phone"],
+                  ["Role", "role"],
+                  [
+                    "City",
+                    "domicileCity",
+                  ],
+                ].map(
+                  ([label, key]) => (
+                    <div
+                      className="dp-row"
+                      key={key}
+                    >
+
+                      <span>
+                        {label}
+                      </span>
+
+                      {editMode ? (
+                        <input
+                          value={
+                            editData[
+                              key
+                            ] || ""
+                          }
+                          onChange={(
+                            e
+                          ) =>
+                            setEditData({
+                              ...editData,
+                              [key]:
+                                e
+                                  .target
+                                  .value,
+                            })
+                          }
+                        />
+                      ) : (
+                        <span>
+                          {
+                            healthworker[
+                              key
+                            ]
+                          }
+                        </span>
+                      )}
+
+                    </div>
+                  )
+                )}
+
+                {/* PASSWORD */}
+
+                {editMode && (
+                  <div className="dp-row">
+
+                    <span>
+                      Password
+                    </span>
+
+                    <input
+                      type="password"
+                      placeholder="Enter new password"
+                      value={password}
+                      onChange={(e) =>
+                        setPassword(
+                          e.target.value
+                        )
+                      }
+                    />
+
+                  </div>
+                )}
+
+              </div>
+
+              {/* =========================
+                  BUTTONS
+              ========================= */}
+
+              <div className="dp-actions">
+
+                {editMode ? (
+                  <>
+
+                    <button
+                      className="btn-save"
+                      onClick={
+                        handleUpdate
+                      }
+                    >
+                      Save
+                    </button>
+
+                    <button
+                      className="btn-cancel"
+                      onClick={
+                        handleCancel
+                      }
+                    >
+                      Cancel
+                    </button>
+
+                  </>
+                ) : (
+                  <>
+
+                    <button
+                      className="btn-edit"
+                      onClick={() =>
+                        setEditMode(
+                          true
+                        )
+                      }
+                    >
+                      Edit Profile
+                    </button>
+
+                    <button
+                      className="btn-delete"
+                      onClick={
+                        handleDelete
+                      }
+                    >
+                      Delete Profile
+                    </button>
+
+                  </>
+                )}
+
+              </div>
+
             </div>
-
-            {/* DETAILS */}
-            <div className="profile-details">
-
-              {isEditing ? (
-                <>
-                  <input
-                    name="fullName"
-                    value={profile.fullName || ""}
-                    onChange={handleChange}
-                    placeholder="Name"
-                  />
-
-                  <input
-                    name="email"
-                    value={profile.email || ""}
-                    onChange={handleChange}
-                    placeholder="Email"
-                  />
-
-                  <input
-                    name="healthcareCenter"
-                    value={profile.healthcareCenter || ""}
-                    onChange={handleChange}
-                    placeholder="Healthcare Center"
-                  />
-
-                  <input
-                    name="location"
-                    value={profile.location || ""}
-                    onChange={handleChange}
-                    placeholder="Location"
-                  />
-
-                  <input
-                    name="phone"
-                    value={profile.phone || ""}
-                    onChange={handleChange}
-                    placeholder="Phone"
-                  />
-
-                  <button className="save-btn" onClick={handleSave}>
-                    Save Changes
-                  </button>
-                </>
-              ) : (
-                <>
-                  <h2>{profile.fullName}</h2>
-                  <p>{profile.email}</p>
-                  <p>{profile.healthcareCenter}</p>
-                  <p>{profile.location}</p>
-                  <p>{profile.phone}</p>
-
-                  <button
-                    className="edit-btn"
-                    onClick={() => setIsEditing(true)}
-                  >
-                    ✏️ Edit Profile
-                  </button>
-                </>
-              )}
-            </div>
-
-            <hr className="divider" />
-
-            {/* PASSWORD */}
-            <div className="password-form">
-              <h3>Change Password</h3>
-
-              <input
-                type="password"
-                name="oldPassword"
-                placeholder="Old Password"
-                value={passwordData.oldPassword}
-                onChange={handlePasswordChange}
-              />
-
-              <input
-                type="password"
-                name="newPassword"
-                placeholder="New Password"
-                value={passwordData.newPassword}
-                onChange={handlePasswordChange}
-              />
-
-              <button className="change-btn" onClick={handleChangePassword}>
-                Update Password
-              </button>
-            </div>
-
-            <button className="logout-btn" onClick={handleLogout}>
-              Logout
-            </button>
 
           </div>
+
         </div>
+
       </div>
+
     </div>
   );
-}
+};
+
+export default HWProfile;

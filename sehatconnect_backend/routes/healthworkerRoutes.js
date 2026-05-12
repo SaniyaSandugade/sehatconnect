@@ -16,14 +16,12 @@ const upload = multer({
   storage,
 });
 
-
 /* =========================
    LOGIN
 ========================= */
 
 router.post("/login", async (req, res) => {
   try {
-
     const { email, password } = req.body;
 
     // FIND USER
@@ -86,14 +84,10 @@ router.post(
       console.log("BODY:", req.body);
       console.log("FILE:", req.file);
 
-      // =========================
       // CHECK EMAIL
-      // =========================
-
-      const existing =
-        await HealthWorker.findOne({
-          email: req.body.email.toLowerCase(),
-        });
+      const existing = await HealthWorker.findOne({
+        email: req.body.email.toLowerCase(),
+      });
 
       if (existing) {
         return res.status(400).json({
@@ -101,70 +95,43 @@ router.post(
         });
       }
 
-      // =========================
       // IMAGE
-      // =========================
-
       let profilePhoto = "";
 
       if (req.file) {
-        profilePhoto =
-          `data:${req.file.mimetype};base64,${req.file.buffer.toString("base64")}`;
+        profilePhoto = `data:${req.file.mimetype};base64,${req.file.buffer.toString("base64")}`;
       }
 
-      // =========================
       // CREATE HEALTHWORKER
-      // =========================
-
       const newHW = new HealthWorker({
         fullName: req.body.fullName,
-
         email: req.body.email.toLowerCase(),
-
         password: req.body.password,
-
         phone: req.body.phone,
-
         role: req.body.role,
-
-        domicileCity:
-          req.body.domicileCity,
-
+        domicileCity: req.body.domicileCity,
         profilePhoto,
       });
 
-      // =========================
       // SAVE
-      // =========================
-
       await newHW.save();
 
-      // =========================
       // SEND EMAIL
-      // =========================
-
       await sendHealthworkerEmail(
         newHW.email,
         newHW.fullName,
         req.body.password
       );
 
-      // =========================
       // RESPONSE
-      // =========================
-
       res.status(201).json({
-        message:
-          "Healthworker added successfully",
+        message: "Healthworker added successfully",
         newHW,
       });
 
     } catch (err) {
 
-      console.log(
-        "REGISTER ERROR:",
-        err
-      );
+      console.log("REGISTER ERROR:", err);
 
       res.status(500).json({
         message: err.message,
@@ -174,18 +141,121 @@ router.post(
 );
 
 /* =========================
-   GET ALL
+   GET ALL HEALTHWORKERS
 ========================= */
 
 router.get("/", async (req, res) => {
   try {
 
-    const data =
-      await HealthWorker.find();
+    const data = await HealthWorker.find();
 
     res.json(data);
 
   } catch (err) {
+
+    res.status(500).json({
+      message: err.message,
+    });
+  }
+});
+
+/* =========================
+   GET SINGLE HEALTHWORKER
+========================= */
+
+router.get("/:id", async (req, res) => {
+  try {
+
+    const healthworker = await HealthWorker.findById(req.params.id);
+
+    if (!healthworker) {
+      return res.status(404).json({
+        message: "Healthworker not found",
+      });
+    }
+
+    res.json(healthworker);
+
+  } catch (err) {
+
+    console.log("GET PROFILE ERROR:", err);
+
+    res.status(500).json({
+      message: err.message,
+    });
+  }
+});
+
+/* =========================
+   UPDATE HEALTHWORKER
+========================= */
+
+router.put("/:id", async (req, res) => {
+  try {
+
+    const updatedHealthworker =
+      await HealthWorker.findByIdAndUpdate(
+        req.params.id,
+        req.body,
+        {
+          new: true,
+        }
+      );
+
+    if (!updatedHealthworker) {
+      return res.status(404).json({
+        message: "Healthworker not found",
+      });
+    }
+
+    res.json(updatedHealthworker);
+
+  } catch (err) {
+
+    console.log("UPDATE ERROR:", err);
+
+    res.status(500).json({
+      message: err.message,
+    });
+  }
+});
+
+/* =========================
+   CHANGE PASSWORD
+========================= */
+
+router.put("/change-password/:id", async (req, res) => {
+  try {
+
+    const { oldPassword, newPassword } = req.body;
+
+    const hw = await HealthWorker.findById(req.params.id);
+
+    if (!hw) {
+      return res.status(404).json({
+        message: "Healthworker not found",
+      });
+    }
+
+    // CHECK OLD PASSWORD
+    if (hw.password !== oldPassword) {
+      return res.status(400).json({
+        message: "Old password incorrect",
+      });
+    }
+
+    // UPDATE PASSWORD
+    hw.password = newPassword;
+
+    await hw.save();
+
+    res.json({
+      message: "Password updated successfully",
+    });
+
+  } catch (err) {
+
+    console.log("PASSWORD CHANGE ERROR:", err);
 
     res.status(500).json({
       message: err.message,

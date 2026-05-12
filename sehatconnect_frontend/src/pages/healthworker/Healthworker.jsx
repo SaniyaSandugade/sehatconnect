@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom"; 
+import { useNavigate } from "react-router-dom";
 import "./Stylesheets/Healthworker.css";
 import heroImg from "../../assets/images/hero.png";
-import HNavbar from "./HNavbar"; 
+import HNavbar from "./HNavbar";
 import HealthworkerSidebar from "./HealthworkerSidebar";
 
 const Healthworker = () => {
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
 
   const [hwData, setHwData] = useState({
     _id: "",
@@ -16,31 +16,36 @@ const Healthworker = () => {
   });
 
   useEffect(() => {
-    const stored = JSON.parse(localStorage.getItem("userData"));
+    const stored = JSON.parse(localStorage.getItem("hwData"));
 
-    if (stored) {
+    if (stored?.healthworker) {
+
+      const hw = stored.healthworker;
+
       setHwData({
-        _id: stored._id || "",
-        fullName: stored.fullName || "",
-        gender: stored.gender || "F",
-        email: stored.email || "",
+        _id: hw._id || "",
+        fullName: hw.fullName || "",
+        gender: hw.gender || "F",
+        email: hw.email || "",
       });
     }
   }, []);
 
   return (
     <div className="healthworker-dashboard">
-      
-      <HNavbar userEmail={hwData.email} role="healthworker" />
+
+      <HNavbar />
 
       <div className="healthworker-body">
+
         <HealthworkerSidebar />
 
         <div className="healthworker-main">
+
           <div className="healthworker-content">
 
-            {/* LEFT */}
             <div className="healthworker-left">
+
               <h1 className="welcome-text">
                 Welcome {hwData.gender === "M" ? "Mr." : "Ms."} {hwData.fullName}
               </h1>
@@ -53,29 +58,36 @@ const Healthworker = () => {
 
                 <button
                   className="btn-primary"
-                  onClick={() => navigate(`/healthworker/${hwData._id}/addpatient`)}
+                  onClick={() =>
+                    navigate(`/healthworker/${hwData._id}/addpatient`)
+                  }
                 >
                   Add Patient
                 </button>
 
                 <button
                   className="btn-primary"
-                  onClick={() => navigate(`/healthworker/${hwData._id}/healthcamps`)}
+                  onClick={() =>
+                    navigate(`/healthworker/${hwData._id}/healthcamps`)
+                  }
                 >
                   Health Camps
                 </button>
 
               </div>
+
             </div>
 
-            {/* RIGHT */}
             <div className="healthworker-right">
-              <img src={heroImg} alt="healthworker illustration" />
+              <img src={heroImg} alt="healthworker" />
             </div>
 
           </div>
+
         </div>
+
       </div>
+
     </div>
   );
 };
